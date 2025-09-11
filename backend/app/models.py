@@ -16,7 +16,7 @@ class Promotion(Base):
     links_json = Column(JSON)
     scraped_at = Column(TIMESTAMP(timezone=True))
     valid_until = Column(TIMESTAMP(timezone=True))
-    # se sua tabela tem expired/valid_candidates/tags inclua aqui também
+    expired = Column(Boolean, default=False)
 
     def to_dict(self):
         return {
@@ -30,5 +30,6 @@ class Promotion(Base):
             "images_json": self.images_json,
             "links_json": self.links_json,
             "scraped_at": self.scraped_at.isoformat() if self.scraped_at else None,
-            "valid_until": self.valid_until.isoformat() if self.valid_until else None
+            "valid_until": self.valid_until.isoformat() if self.valid_until else None,
+            "expired": self.expired
         }

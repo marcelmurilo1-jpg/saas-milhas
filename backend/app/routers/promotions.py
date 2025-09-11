@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from sqlalchemy import or_, and_
+from sqlalchemy import or_
 
 from ..db import SessionLocal
 from ..models import Promotion
@@ -21,7 +21,7 @@ def get_db():
 @router.get("/today")
 def get_today_promotions(db: Session = Depends(get_db)):
     now = datetime.now(TZ)
-    # pega promos com valid_until NULL (ambíguo) ou que ainda não expiraram; e sem expired=True
+    # traz promos sem valid_until (ambíguo) ou que ainda não expiraram
     promos = db.query(Promotion).filter(
         or_(Promotion.valid_until == None, Promotion.valid_until >= now)
     ).order_by(Promotion.date_published.desc()).all()
